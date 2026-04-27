@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LF-mc: An Efficient Verifier for Lingua Franca</title>
+  <meta name="description" content="Artifact page for the QEST+FORMATS 2026 tool paper LF-mc: An Efficient Verifier for Lingua Franca.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="index.html">LF-mc Artifact</a>
+      <div class="nav-links">
+        <a href="paper.pdf">Paper</a>
+        <a href="artifact/README.html">Artifact README</a>
+        <a href="artifact/run-all-experiments.sh">Experiment Script</a>
+        <a href="https://doi.org/10.5281/zenodo.19568831">Zenodo</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">QEST+FORMATS 2026 Artifact</p>
+      <h1>LF-mc: An Efficient Verifier for Lingua Franca</h1>
+      <p class="lede">
+        LF-mc is a verification tool for Lingua Franca programs. It compiles annotated LF models to Maude,
+        runs simulation, reachability, and LTL analyses, and reports the results through the LF toolchain.
+      </p>
+      <div class="actions">
+        <a class="button" href="artifact/README.html">Read Artifact Instructions</a>
+        <a class="button secondary" href="paper.pdf">Download Paper</a>
+        <a class="button secondary" href="artifact/lf-mc-v1.2.tar.gz">Download LF-mc Package</a>
+        <a class="button secondary" href="https://doi.org/10.5281/zenodo.19568831">Zenodo Record</a>
+      </div>
+    </section>
+
+    <section class="facts" aria-label="Artifact summary">
+      <div class="fact">
+        <strong>Docker Image</strong>
+        <span><code>ghcr.io/symbolicsafety/lf-mc:v1.2</code></span>
+      </div>
+      <div class="fact">
+        <strong>Benchmarks</strong>
+        <span>22 LF-Verifier benchmark programs</span>
+      </div>
+      <div class="fact">
+        <strong>Replication</strong>
+        <span>Runs the LF-mc column of Table 2</span>
+      </div>
+      <div class="fact">
+        <strong>Platforms</strong>
+        <span>Docker on Linux, macOS, and Windows with WSL</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Quick Start</h2>
+      <p>
+        The normal reviewer path uses the Docker image hosted on GitHub Container Registry.
+        The repository does not host Docker image archives.
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="docker pull ghcr.io/symbolicsafety/lf-mc:v1.2">Copy</button><span class="prompt">user@host:~$</span> docker pull ghcr.io/symbolicsafety/lf-mc:v1.2</div>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="docker run -it --rm ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l">Copy</button><span class="prompt">user@host:~$</span> docker run -it --rm ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l</div>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="lfc /opt/lf-maude/examples/src/ADASModel.lf">Copy</button><span class="prompt">docker:/#</span> lfc /opt/lf-maude/examples/src/ADASModel.lf</div>
+    </section>
+
+    <section>
+      <h2>Artifact Contents</h2>
+      <p>
+        The detailed instructions cover Docker setup, smoke tests, full experiment replication,
+        using LF-mc on new inputs, and building the included source projects.
+      </p>
+      <div class="link-grid">
+        <a class="button secondary" href="artifact/README.html">Full README</a>
+        <a class="button secondary" href="artifact/lf-mc-v1.2.tar.gz">LF-mc v1.2 Package</a>
+        <a class="button secondary" href="artifact/tests.csv">Benchmark List</a>
+        <a class="button secondary" href="artifact/results.csv">Representative Results</a>
+        <a class="button secondary" href="artifact/hyperfine-report.json">Hyperfine Report</a>
+        <a class="button secondary" href="artifact/run-all-experiments.sh">Experiment Script</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Replicating Table 2</h2>
+      <p>
+        From the <code>artifact</code> directory, run the provided script. It starts one Docker container,
+        invokes the bundled <code>hyperfine</code>, runs each benchmark listed in <code>tests.csv</code>,
+        and writes <code>results.csv</code>, <code>hyperfine-report.json</code>, and per-benchmark logs.
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="cd artifact && sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:repo$</span> cd artifact &amp;&amp; sh run-all-experiments.sh --overwrite</div>
+    </section>
+
+    <section>
+      <h2>Representative Results</h2>
+      <p>
+        The checked-in CSV records a representative run of the LF-mc experiments. Timings depend on host
+        hardware, Docker overhead, and the number of hyperfine repetitions.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Program</th>
+              <th>LF-mc Gen.</th>
+              <th>LF-mc Solving</th>
+              <th>LF-mc Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>ADAS</td><td>1.824</td><td>0.038</td><td>1.862</td></tr>
+            <tr><td>AircraftDoor</td><td>1.705</td><td>&lt;0.001</td><td>1.705</td></tr>
+            <tr><td>Alarm</td><td>1.695</td><td>&lt;0.001</td><td>1.695</td></tr>
+            <tr><td>CoopSchedule</td><td>1.679</td><td>0.009</td><td>1.688</td></tr>
+            <tr><td>Elevator</td><td>1.908</td><td>0.002</td><td>1.910</td></tr>
+            <tr><td>TrainDoor</td><td>1.772</td><td>&lt;0.001</td><td>1.772</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        See <a href="artifact/results.csv">artifact/results.csv</a> for the complete 22-program table.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Artifact for "LF-mc: An Efficient Verifier for Lingua Franca". Last updated 2026-04-27.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

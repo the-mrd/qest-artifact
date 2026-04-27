@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Artifact README - LF-mc</title>
+  <meta name="description" content="Detailed artifact instructions for LF-mc.">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="../index.html">LF-mc Artifact</a>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../paper.pdf">Paper</a>
+        <a href="run-all-experiments.sh">Experiment Script</a>
+        <a href="https://doi.org/10.5281/zenodo.19568831">Zenodo</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Artifact README</p>
+      <h1>Detailed Instructions for LF-mc</h1>
+      <p class="lede">
+        This page explains how to run the artifact for the QEST+FORMATS 2026 tool paper
+        "LF-mc: An Efficient Verifier for Lingua Franca", how to reproduce the reported
+        experiments, and how to build the tool components from source.
+      </p>
+    </section>
+
+    <section class="panel">
+      <p>
+        Archival artifact record:
+        <a href="https://doi.org/10.5281/zenodo.19568831">https://doi.org/10.5281/zenodo.19568831</a>.
+      </p>
+      <p>
+        Runtime Docker image:
+        <code>ghcr.io/symbolicsafety/lf-mc:v1.2</code>.
+      </p>
+    </section>
+
+    <section>
+      <h2>Required Software</h2>
+      <p>
+        Docker is required to run the artifact in the intended reproducible environment.
+        Docker Desktop is recommended for macOS and Windows users. Linux users can install
+        Docker Engine using their distribution's package manager or the official Docker instructions.
+      </p>
+      <p>
+        Windows users should run the provided shell scripts from WSL with a Linux distribution.
+      </p>
+    </section>
+
+    <section>
+      <h2>Docker Setup</h2>
+      <p>
+        Pull the artifact image from GitHub Container Registry:
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="docker pull ghcr.io/symbolicsafety/lf-mc:v1.2">Copy</button><span class="prompt">user@host:~$</span> docker pull ghcr.io/symbolicsafety/lf-mc:v1.2</div>
+
+      <p>
+        Start an interactive shell inside the container:
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="docker run -it --rm ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l">Copy</button><span class="prompt">user@host:~$</span> docker run -it --rm ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l</div>
+
+      <p>
+        The image contains the LF compiler extension, the Maude runtime, the benchmark inputs,
+        <code>hyperfine</code>, and helper tools used by the replication script.
+      </p>
+    </section>
+
+    <section>
+      <h2>Smoke Test</h2>
+      <p>
+        After entering the container, run LF-mc on the ADAS example from the paper:
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="lfc /opt/lf-maude/examples/src/ADASModel.lf">Copy</button><span class="prompt">docker:/#</span> lfc /opt/lf-maude/examples/src/ADASModel.lf</div>
+
+      <p>
+        This invokes LF-mc on an annotated Lingua Franca file, generates the corresponding
+        Maude model and analysis commands, invokes Maude, and prints the simulation,
+        reachability, and LTL results. The expected output includes successful analyses,
+        one bounded LTL counterexample for the 54 ms bound, and a "No Solution" result
+        for the bad-state reachability query.
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="exit">Copy</button><span class="prompt">docker:/#</span> exit</div>
+    </section>
+
+    <section>
+      <h2>Experiment Replication</h2>
+      <p>
+        Table 2 of the paper compares LF-mc with LF-Verifier and PolyVer on the 22
+        LF-Verifier benchmark programs. This artifact reruns the LF-mc column using the
+        Docker image above. The LF-Verifier and PolyVer columns are comparison baselines
+        from the published results of those tools.
+      </p>
+      <p>
+        The default run uses one hyperfine measurement and no warmup, which is intended as
+        a quick artifact-evaluation run. A more stable timing run can use more repetitions.
+      </p>
+
+      <h3>Default Run</h3>
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="cd artifact && sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:repo$</span> cd artifact &amp;&amp; sh run-all-experiments.sh --overwrite</div>
+
+      <p>
+        The script starts one Docker container, runs all benchmark programs listed in
+        <a href="tests.csv">tests.csv</a>, prints a timing table, and writes:
+      </p>
+      <ul>
+        <li><a href="results.csv">results.csv</a>: CSV summary of generation, solving, and total time.</li>
+        <li><a href="hyperfine-report.json">hyperfine-report.json</a>: combined hyperfine data.</li>
+        <li><code>logs/</code>: LF-mc output and per-benchmark hyperfine JSON files created during a run.</li>
+      </ul>
+
+      <h3>Stable Timing Run</h3>
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="cd artifact && WARMUP=1 RUNS=20 sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:repo$</span> cd artifact &amp;&amp; WARMUP=1 RUNS=20 sh run-all-experiments.sh --overwrite</div>
+
+      <h3>Image Override</h3>
+      <p>
+        The script defaults to <code>ghcr.io/symbolicsafety/lf-mc:v1.2</code>. Override
+        <code>IMAGE</code> if you are testing a locally built or retagged image:
+      </p>
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="cd artifact && IMAGE=lf-mc-local:v1.2 sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:repo$</span> cd artifact &amp;&amp; IMAGE=lf-mc-local:v1.2 sh run-all-experiments.sh --overwrite</div>
+    </section>
+
+    <section>
+      <h2>Running Individual Benchmarks</h2>
+      <p>
+        The second column of <a href="tests.csv">tests.csv</a> gives the LF source path
+        inside the Docker image. For example:
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="docker run -it --rm ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l">Copy</button><span class="prompt">user@host:~$</span> docker run -it --rm ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l</div>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="lfc /opt/lf-maude/examples/src/TrainDoor.lf">Copy</button><span class="prompt">docker:/#</span> lfc /opt/lf-maude/examples/src/TrainDoor.lf</div>
+
+      <p>
+        The benchmark files in <code>/opt/lf-maude/examples/src/</code> are useful templates
+        for new inputs. In particular, <code>ADASModel.lf</code> shows simulation,
+        reachability, LTL, and <code>@maudePhysAct</code> annotations in one file.
+      </p>
+    </section>
+
+    <section>
+      <h2>Using LF-mc on New Inputs</h2>
+      <p>
+        LF-mc reads <code>@maude</code> and <code>@maudePhysAct</code> annotations from
+        an LF source file, generates the Maude model and analysis commands, invokes Maude,
+        and prints the results.
+      </p>
+      <p>
+        You can edit files inside the container for quick experiments, or mount a host
+        directory containing LF files:
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="docker run -it --rm -v &quot;$PWD:/work&quot; ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l">Copy</button><span class="prompt">user@host:inputs$</span> docker run -it --rm -v &quot;$PWD:/work&quot; ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l</div>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="lfc /work/MyModel.lf">Copy</button><span class="prompt">docker:/#</span> lfc /work/MyModel.lf</div>
+
+      <p>
+        For mounted host inputs, generated files are written relative to the mounted input
+        directory when permitted by the LF compiler.
+      </p>
+    </section>
+
+    <section>
+      <h2>Building From Source</h2>
+      <p>
+        The source code is available through the archived artifact record and the project
+        repositories:
+        <a href="https://github.com/symbolicsafety/lf-maude">symbolicsafety/lf-maude</a>
+        and <a href="https://github.com/symbolicsafety/lf-mc">symbolicsafety/lf-mc</a>.
+        The archived artifact source tree has this structure:
+      </p>
+
+      <div class="command-block">artifact root/
+├── run-all-experiments.sh
+├── tests.csv
+├── code/
+│   ├── lf-maude-v1.2.2/
+│   └── lf-mc-v1.2/
+└── supporting archives and results</div>
+
+      <h3>Maude Backend</h3>
+      <p>
+        <code>code/lf-maude-v1.2.2/</code> contains the Maude backend/runtime used by LF-mc.
+        The root contains the Maude files implementing the LF interpreter. Its
+        <code>examples/src/</code> directory contains annotated LF programs, and
+        <code>examples/mod-gen/</code> contains generated Maude models for bundled examples.
+      </p>
+
+      <h3>LF Compiler Extensions</h3>
+      <p>
+        <code>code/lf-mc-v1.2/</code> contains the Lingua Franca compiler extension
+        that automatically translates <code>.lf</code> files with analysis annotations
+        into Maude files that can be run by <code>lf-maude</code>.
+      </p>
+
+      <div class="command-block">code/lf-mc-v1.2/
+├── ...
+├── core
+│   └── src
+│       └── main
+│           ├── antlr
+│           │   ├── LTLLexer.g4
+│           │   ├── LTLParser.g4
+│           │   └── ...
+│           └── java
+│               └── org
+│                   └── lflang
+│                       ├── analyses
+│                       │   ├── c
+│                       │   │   ├── CToMaudeVisitor.java
+│                       │   │   └── ...
+│                       │   └── maude
+│                       │       ├── LTLVisitor.java
+│                       │       ├── MaudeGenerator.java
+│                       │       └── ...
+│                       └── ...
+└── ...</div>
+
+      <p>
+        This is a Java project built using Gradle. The build used for this submission
+        is included in the Docker image referenced above. A standalone LF-mc package is
+        also available here for users who want to run LF-mc without building the compiler
+        extension from source:
+        <a href="lf-mc-v1.2.tar.gz">lf-mc-v1.2.tar.gz</a>.
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="tar -xzf lf-mc-v1.2.tar.gz">Copy</button><span class="prompt">user@host:artifact$</span> tar -xzf lf-mc-v1.2.tar.gz</div>
+
+      <p>
+        The archive extracts to <code>lf-cli-lf-mc-v1.2-lf-base-v0.9.1/</code> and
+        includes command-line binaries such as <code>bin/lfc</code>, <code>bin/lff</code>,
+        and <code>bin/lfd</code>. Its SHA-256 checksum is:
+      </p>
+
+      <div class="command-block">232c719cbbb3a2e6a5ed8d4024b31939f77122fbaa527ecb39c4f289f2819b72  lf-mc-v1.2.tar.gz</div>
+
+      <p>
+        To build the project from source instead, run <code>./gradlew assemble</code>
+        at the root of the <code>code/lf-mc-v1.2</code> folder:
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="./gradlew assemble">Copy</button><span class="prompt">user@host:code/lf-mc-v1.2$</span> ./gradlew assemble</div>
+
+      <p>
+        Building from source requires a Java/Gradle environment and a machine with
+        substantial memory; the artifact notes recommend more than 16 GB of RAM.
+      </p>
+    </section>
+
+    <section>
+      <h2>Badges</h2>
+      <p>
+        The artifact is intended to support the Available, Functional, and Reusable badges.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="../index.html">Back to landing page</a></p>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
