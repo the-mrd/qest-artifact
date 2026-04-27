@@ -14,7 +14,7 @@
       <div class="nav-links">
         <a href="../index.html">Home</a>
         <a href="../paper.pdf">Paper</a>
-        <a href="run-all-experiments.sh">Experiment Script</a>
+        <a href="experiments.zip">Experiments</a>
         <a href="https://doi.org/10.5281/zenodo.19568831">Zenodo</a>
       </div>
     </nav>
@@ -106,12 +106,20 @@
         a quick artifact-evaluation run. A more stable timing run can use more repetitions.
       </p>
 
+      <p>
+        Download and extract <a href="experiments.zip">experiments.zip</a>. It contains
+        <code>run-all-experiments.sh</code> and <code>tests.csv</code> in the archive root.
+        Run the commands below from the extracted directory.
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="unzip experiments.zip">Copy</button><span class="prompt">user@host:~$</span> unzip experiments.zip</div>
+
       <h3>Default Run</h3>
-      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="cd artifact && sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:repo$</span> cd artifact &amp;&amp; sh run-all-experiments.sh --overwrite</div>
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:experiments$</span> sh run-all-experiments.sh --overwrite</div>
 
       <p>
         The script starts one Docker container, runs all benchmark programs listed in
-        <a href="tests.csv">tests.csv</a>, prints a timing table, and writes:
+        <code>tests.csv</code>, prints a timing table, and writes:
       </p>
       <ul>
         <li><code>results.csv</code>: CSV summary of generation, solving, and total time.</li>
@@ -120,20 +128,20 @@
       </ul>
 
       <h3>Stable Timing Run</h3>
-      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="cd artifact && WARMUP=1 RUNS=20 sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:repo$</span> cd artifact &amp;&amp; WARMUP=1 RUNS=20 sh run-all-experiments.sh --overwrite</div>
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="WARMUP=1 RUNS=20 sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:experiments$</span> WARMUP=1 RUNS=20 sh run-all-experiments.sh --overwrite</div>
 
       <h3>Image Override</h3>
       <p>
         The script defaults to <code>ghcr.io/symbolicsafety/lf-mc:v1.2</code>. Override
         <code>IMAGE</code> if you are testing a locally built or retagged image:
       </p>
-      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="cd artifact && IMAGE=lf-mc-local:v1.2 sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:repo$</span> cd artifact &amp;&amp; IMAGE=lf-mc-local:v1.2 sh run-all-experiments.sh --overwrite</div>
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="IMAGE=lf-mc-local:v1.2 sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:experiments$</span> IMAGE=lf-mc-local:v1.2 sh run-all-experiments.sh --overwrite</div>
     </section>
 
     <section>
       <h2>Running Individual Benchmarks</h2>
       <p>
-        The second column of <a href="tests.csv">tests.csv</a> gives the LF source path
+        The second column of <code>tests.csv</code> in <a href="experiments.zip">experiments.zip</a> gives the LF source path
         inside the Docker image. For example:
       </p>
 
@@ -181,8 +189,7 @@
       </p>
 
       <div class="command-block">artifact root/
-├── run-all-experiments.sh
-├── tests.csv
+├── experiments.zip
 ├── code/
 │   ├── lf-maude-v1.2.2/
 │   └── lf-mc-v1.2/
