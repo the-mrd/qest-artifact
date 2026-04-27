@@ -14,7 +14,6 @@
       <div class="nav-links">
         <a href="../index.html">Home</a>
         <a href="../paper.pdf">Paper</a>
-        <a href="experiments.zip">Experiments</a>
         <a href="https://doi.org/10.5281/zenodo.19568831">Zenodo</a>
       </div>
     </nav>
@@ -31,16 +30,6 @@
       </p>
     </section>
 
-    <section class="artifact-meta" aria-label="Artifact access information">
-      <div>
-        <span class="meta-label">Immutable artifact</span>
-        <a href="https://doi.org/10.5281/zenodo.19568831">https://doi.org/10.5281/zenodo.19568831</a>
-      </div>
-      <div>
-        <span class="meta-label">Runtime Docker image</span>
-        <code>ghcr.io/symbolicsafety/lf-mc:v1.2</code>
-      </div>
-    </section>
 
     <section>
       <h2>Required Software</h2>
@@ -72,6 +61,7 @@
         The image contains the LF compiler extension, the Maude runtime, the benchmark inputs,
         <code>hyperfine</code>, and helper tools used by the replication script.
       </p>
+        <p>Alternatively, per-architecture docker images are available inside the <a href="https://doi.org/10.5281/zenodo.19568831">immutable archive on Zenodo</a>. Just unpack the archive and run <code>docker load -i lf-mc-v1.2:ARCH</code>, while replacing ARCH either arm64 or amd64, matching your system's architecture.</p>
     </section>
 
     <section>
@@ -97,7 +87,7 @@
       <h2>Experiment Replication</h2>
       <p>
         Table 2 of the paper compares LF-mc with LF-Verifier and PolyVer on the 22
-        LF-Verifier benchmark programs. This artifact reruns the LF-mc column using the
+        LF-Verifier benchmark programs. This artifact reproduces the LF-mc column using the
         Docker image above. The LF-Verifier and PolyVer columns are comparison baselines
         from the published results of those tools.
       </p>
@@ -109,10 +99,8 @@
       <p>
         Download and extract <a href="experiments.zip">experiments.zip</a>. It contains
         <code>run-all-experiments.sh</code> and <code>tests.csv</code> in the archive root.
-        Run the commands below from the extracted directory.
       </p>
 
-      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="unzip experiments.zip">Copy</button><span class="prompt">user@host:~$</span> unzip experiments.zip</div>
 
       <h3>Default Run</h3>
       <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:experiments$</span> sh run-all-experiments.sh --overwrite</div>
@@ -123,7 +111,7 @@
       </p>
       <ul>
         <li><code>results.csv</code>: CSV summary of generation, solving, and total time.</li>
-        <li><code>hyperfine-report.json</code>: combined hyperfine data.</li>
+        <li><code>hyperfine-report.json</code>: combined hyperfine data with detailed runtime figures.</li>
         <li><code>logs/</code>: LF-mc output and per-benchmark hyperfine JSON files created during a run.</li>
       </ul>
 
@@ -157,20 +145,29 @@
     </section>
 
     <section>
-      <h2>Using LF-mc on New Inputs</h2>
+      <h2>Using LF-mc on new inputs</h2>
       <p>
         LF-mc reads <code>@maude</code> and <code>@maudePhysAct</code> annotations from
         an LF source file, generates the Maude model and analysis commands, invokes Maude,
         and prints the results.
       </p>
       <p>
-        You can edit files inside the container for quick experiments, or mount a host
-        directory containing LF files:
+        You can edit files inside the container for quick experiments, or place modified
+        LF files in a host-side <code>src</code> directory and mount the containing folder:
       </p>
 
       <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="docker run -it --rm -v &quot;$PWD:/work&quot; ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l">Copy</button><span class="prompt">user@host:inputs$</span> docker run -it --rm -v &quot;$PWD:/work&quot; ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l</div>
 
-      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="lfc /work/MyModel.lf">Copy</button><span class="prompt">docker:/#</span> lfc /work/MyModel.lf</div>
+      <p class="note">
+        <em>For example, to change the time-bounded LTL model-checking command
+        <code>@maude(analysis="ltl", timeBound=54, goal="&lt;&gt;(brakesApplied in b == 1)")</code>
+        in the ADAS example into an unbounded version, add the same annotation without
+        <code>timeBound</code>:
+        <code>@maude(analysis="ltl", goal="&lt;&gt;(brakesApplied in b == 1)")</code>.
+        Store the modified file as <code>src/ADASModel.lf</code> on the host.</em>
+      </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="lfc /work/src/ADASModel.lf">Copy</button><span class="prompt">docker:/#</span> lfc /work/src/ADASModel.lf</div>
 
       <p>
         For mounted host inputs, generated files are written relative to the mounted input
