@@ -10,128 +10,65 @@
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="Primary">
-      <a class="brand" href="index.html">LF-mc Artifact</a>
+      <a class="brand" href="index.html">QEST+FORMATS 2026 Artifact</a>
       <div class="nav-links">
         <a href="paper.pdf">Paper</a>
-        <a href="artifact/README.html">Artifact README</a>
-        <a href="artifact/run-all-experiments.sh">Experiment Script</a>
+        <a href="artifact/README.html">README</a>
         <a href="https://doi.org/10.5281/zenodo.19568831">Zenodo</a>
       </div>
     </nav>
   </header>
 
   <main>
-    <section class="hero">
-      <p class="eyebrow">QEST+FORMATS 2026 Artifact</p>
-      <h1>LF-mc: An Efficient Verifier for Lingua Franca</h1>
-      <p class="lede">
-        LF-mc is a verification tool for Lingua Franca programs. It compiles annotated LF models to Maude,
-        runs simulation, reachability, and LTL analyses, and reports the results through the LF toolchain.
-      </p>
-      <div class="actions">
-        <a class="button" href="artifact/README.html">Read Artifact Instructions</a>
-        <a class="button secondary" href="paper.pdf">Download Paper</a>
-        <a class="button secondary" href="artifact/lf-mc-v1.2.tar.gz">Download LF-mc Package</a>
-        <a class="button secondary" href="https://doi.org/10.5281/zenodo.19568831">Zenodo Record</a>
-      </div>
-    </section>
+    <h1>LF-mc: An Efficient Verifier for Lingua Franca</h1>
 
-    <section class="facts" aria-label="Artifact summary">
-      <div class="fact">
-        <strong>Docker Image</strong>
-        <span><code>ghcr.io/symbolicsafety/lf-mc:v1.2</code></span>
-      </div>
-      <div class="fact">
-        <strong>Benchmarks</strong>
-        <span>22 LF-Verifier benchmark programs</span>
-      </div>
-      <div class="fact">
-        <strong>Replication</strong>
-        <span>Runs the LF-mc column of Table 2</span>
-      </div>
-      <div class="fact">
-        <strong>Platforms</strong>
-        <span>Docker on Linux, macOS, and Windows with WSL</span>
-      </div>
-    </section>
+    <p>
+      Welcome to the artifact page for our QEST+FORMATS 2026 tool paper,
+      <em>"LF-mc: An Efficient Verifier for Lingua Franca"</em>.
+    </p>
 
-    <section>
-      <h2>Quick Start</h2>
-      <p>
-        The normal reviewer path uses the Docker image hosted on GitHub Container Registry.
-        The repository does not host Docker image archives.
-      </p>
+    <p>
+      This page provides the paper and accompanying artifact prepared to support
+      the paper's evaluation. It contains:
+    </p>
 
-      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="docker pull ghcr.io/symbolicsafety/lf-mc:v1.2">Copy</button><span class="prompt">user@host:~$</span> docker pull ghcr.io/symbolicsafety/lf-mc:v1.2</div>
+    <ol>
+      <li>A PDF of the submitted paper.</li>
+      <li>A Docker-based environment for running <code>LF-mc</code>.</li>
+      <li>The <code>LF-mc</code> v1.2 package for use without building from source.</li>
+      <li>Experiment scripts for reproducing the <code>LF-mc</code> column of Table 2.</li>
+      <li>The list of 22 LF-Verifier benchmark programs used in the evaluation.</li>
+      <li>The source archive containing the <code>lf-maude</code> and <code>lf-mc</code> source trees.</li>
+      <li>Instructions for running the tool, reproducing the experiments, and building from source.</li>
+    </ol>
 
-      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="docker run -it --rm ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l">Copy</button><span class="prompt">user@host:~$</span> docker run -it --rm ghcr.io/symbolicsafety/lf-mc:v1.2 bash -l</div>
+    <hr>
 
-      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="lfc /opt/lf-maude/examples/src/ADASModel.lf">Copy</button><span class="prompt">docker:/#</span> lfc /opt/lf-maude/examples/src/ADASModel.lf</div>
-    </section>
+    <h2>Paper</h2>
+    <p>
+      <a href="paper.pdf">LF-mc: An Efficient Verifier for Lingua Franca (pdf)</a>
+    </p>
 
-    <section>
-      <h2>Artifact Contents</h2>
-      <p>
-        The detailed instructions cover Docker setup, smoke tests, full experiment replication,
-        using LF-mc on new inputs, and building the included source projects.
-      </p>
-      <div class="link-grid">
-        <a class="button secondary" href="artifact/README.html">Full README</a>
-        <a class="button secondary" href="artifact/lf-mc-v1.2.tar.gz">LF-mc v1.2 Package</a>
-        <a class="button secondary" href="artifact/tests.csv">Benchmark List</a>
-        <a class="button secondary" href="artifact/results.csv">Representative Results</a>
-        <a class="button secondary" href="artifact/hyperfine-report.json">Hyperfine Report</a>
-        <a class="button secondary" href="artifact/run-all-experiments.sh">Experiment Script</a>
-      </div>
-    </section>
+    <h2>Artifact</h2>
+    <ul>
+      <li><a href="https://doi.org/10.5281/zenodo.19568831">Zenodo artifact record</a></li>
+      <li><a href="artifact/code.zip">Source code archive</a></li>
+      <li><a href="artifact/lf-mc-v1.2.tar.gz">LF-mc v1.2 package</a></li>
+      <li>Docker image: <code>ghcr.io/symbolicsafety/lf-mc:v1.2</code></li>
+      <li><a href="artifact/run-all-experiments.sh">Experiment script</a></li>
+      <li><a href="artifact/tests.csv">Benchmark list</a></li>
+    </ul>
 
-    <section>
-      <h2>Replicating Table 2</h2>
-      <p>
-        From the <code>artifact</code> directory, run the provided script. It starts one Docker container,
-        invokes the bundled <code>hyperfine</code>, runs each benchmark listed in <code>tests.csv</code>,
-        and writes <code>results.csv</code>, <code>hyperfine-report.json</code>, and per-benchmark logs.
-      </p>
+    <h2>Instructions</h2>
+    <p>
+      See the <a href="artifact/README.html">Artifact README</a> for details on
+      Docker setup, smoke tests, experiment replication, using <code>LF-mc</code>
+      on new inputs, and building the software from source.
+    </p>
 
-      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="cd artifact && sh run-all-experiments.sh --overwrite">Copy</button><span class="prompt">user@host:repo$</span> cd artifact &amp;&amp; sh run-all-experiments.sh --overwrite</div>
-    </section>
+    <hr>
 
-    <section>
-      <h2>Representative Results</h2>
-      <p>
-        The checked-in CSV records a representative run of the LF-mc experiments. Timings depend on host
-        hardware, Docker overhead, and the number of hyperfine repetitions.
-      </p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Program</th>
-              <th>LF-mc Gen.</th>
-              <th>LF-mc Solving</th>
-              <th>LF-mc Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>ADAS</td><td>1.824</td><td>0.038</td><td>1.862</td></tr>
-            <tr><td>AircraftDoor</td><td>1.705</td><td>&lt;0.001</td><td>1.705</td></tr>
-            <tr><td>Alarm</td><td>1.695</td><td>&lt;0.001</td><td>1.695</td></tr>
-            <tr><td>CoopSchedule</td><td>1.679</td><td>0.009</td><td>1.688</td></tr>
-            <tr><td>Elevator</td><td>1.908</td><td>0.002</td><td>1.910</td></tr>
-            <tr><td>TrainDoor</td><td>1.772</td><td>&lt;0.001</td><td>1.772</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>
-        See <a href="artifact/results.csv">artifact/results.csv</a> for the complete 22-program table.
-      </p>
-    </section>
+    <p class="updated">Last updated: 2026-04-27</p>
   </main>
-
-  <footer class="site-footer">
-    <p>Artifact for "LF-mc: An Efficient Verifier for Lingua Franca". Last updated 2026-04-27.</p>
-  </footer>
-
-  <script src="script.js"></script>
 </body>
 </html>
