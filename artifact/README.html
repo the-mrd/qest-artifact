@@ -198,7 +198,15 @@
         The root contains the Maude files implementing the LF interpreter. Its
         <code>examples/src/</code> directory contains annotated LF programs, and
         <code>examples/mod-gen/</code> contains generated Maude models for bundled examples.
+        Running these Maude files directly requires Maude version 3.3. Outside the
+        Docker image, set <code>LF_MAUDE_BASE</code> to the LF Maude implementation
+        directory and <code>MAUDE_BASE</code> to the directory containing the Maude
+        3.3 <code>maude</code> executable:
       </p>
+
+      <div class="command-block"><button class="copy-btn" onclick="copyCommand(this)" data-command="export LF_MAUDE_BASE=$PWD/code/lf-maude-v1.2.2
+export MAUDE_BASE=/path/to/maude-3.3/bin">Copy</button><span class="prompt">user@host:artifact$</span> export LF_MAUDE_BASE=$PWD/code/lf-maude-v1.2.2
+<span class="prompt">user@host:artifact$</span> export MAUDE_BASE=/path/to/maude-3.3/bin</div>
 
       <h3>LF Compiler Extensions</h3>
       <p>
